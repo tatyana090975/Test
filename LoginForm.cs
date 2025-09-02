@@ -10,11 +10,13 @@ using System.Windows.Forms;
 
 namespace Test
 {
-    public partial class Form1 : Form
+    public partial class LoginForm : Form
     {
-        public Form1()
+        public LoginForm()
         {
-            InitializeComponent();            
+            InitializeComponent();   
+            
+            
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -23,5 +25,6 @@ namespace Test
             form4.Show();
             linkLabel1.LinkVisited = true;
         }
+       
     }
 }
