@@ -14,8 +14,8 @@ namespace Test
     {
         public LoginForm()
         {
-            InitializeComponent();   
-            
+            InitializeComponent();
+
             
         }
 
