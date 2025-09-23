@@ -32,8 +32,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.loginField = new System.Windows.Forms.TextBox();
             this.passField = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.ButtonLogin = new System.Windows.Forms.Button();
+            this.closeWindow = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
@@ -86,27 +86,29 @@
             this.passField.Name = "passField";
             this.passField.Size = new System.Drawing.Size(242, 31);
             this.passField.TabIndex = 3;
-            this.passField.UseSystemPasswordChar = true;
+            this.passField.UseSystemPasswordChar = true;  
             // 
-            // button1
+            // ButtonLogin
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(542, 346);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(92, 32);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "ОК";
-            this.button1.UseVisualStyleBackColor = true;
+            this.ButtonLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonLogin.Location = new System.Drawing.Point(542, 346);
+            this.ButtonLogin.Name = "ButtonLogin";
+            this.ButtonLogin.Size = new System.Drawing.Size(92, 32);
+            this.ButtonLogin.TabIndex = 4;
+            this.ButtonLogin.Text = "ОК";
+            this.ButtonLogin.UseVisualStyleBackColor = true;
+            this.ButtonLogin.Click += new System.EventHandler(this.ButtonLogin_Click);
             // 
-            // button2
+            // closeWindow
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button2.Location = new System.Drawing.Point(680, 346);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(86, 32);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Отмена";
-            this.button2.UseVisualStyleBackColor = true;
+            this.closeWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeWindow.Location = new System.Drawing.Point(680, 346);
+            this.closeWindow.Name = "closeWindow";
+            this.closeWindow.Size = new System.Drawing.Size(86, 32);
+            this.closeWindow.TabIndex = 5;
+            this.closeWindow.Text = "Отмена";
+            this.closeWindow.UseVisualStyleBackColor = true;
+            this.closeWindow.Click += new System.EventHandler(this.closeWindow_Click);
             // 
             // linkLabel1
             // 
@@ -143,11 +145,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.closeWindow);
+            this.Controls.Add(this.ButtonLogin);
             this.Name = "LoginForm";
             this.Text = "Авторизация";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;            
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -160,8 +162,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox loginField;
         private System.Windows.Forms.TextBox passField;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button ButtonLogin;
+        private System.Windows.Forms.Button closeWindow;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Panel panel1;
     }
