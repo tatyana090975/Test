@@ -69,6 +69,7 @@
             this.OkButton.TabIndex = 0;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // panel2
             // 
@@ -109,6 +110,7 @@
             this.nametestDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.nametestDataGridView.Location = new System.Drawing.Point(0, 0);
             this.nametestDataGridView.Name = "nametestDataGridView";
+            this.nametestDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.nametestDataGridView.Size = new System.Drawing.Size(776, 303);
             this.nametestDataGridView.TabIndex = 0;
             // 

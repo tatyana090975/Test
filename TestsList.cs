@@ -13,6 +13,7 @@ namespace Test
 {
     public partial class TestsList : Form
     {
+        //public int currenRow { get; set; }
         public TestsList()
         {
             InitializeComponent();
@@ -47,6 +48,13 @@ namespace Test
                 StartPage start = new StartPage();
                 start.Show();
             }
+        }
+
+        public void OkButton_Click(object sender, EventArgs e)
+        {            
+            int currenRow = nametestDataGridView.CurrentRow.Index + 1;
+            TestForm testForm = new TestForm(currenRow);
+            testForm.Show();
         }
     }
 }
