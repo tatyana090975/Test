@@ -1,6 +1,6 @@
 ﻿namespace Test
 {
-    partial class Form2
+    partial class StartPage
     {
         /// <summary>
         /// Required designer variable.
@@ -28,58 +28,76 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.passTest = new System.Windows.Forms.Button();
+            this.createTest = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // passTest
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button1.Location = new System.Drawing.Point(139, 109);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(554, 58);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Создать тест";
-            this.button1.UseVisualStyleBackColor = true;
+            this.passTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.passTest.Location = new System.Drawing.Point(56, 49);
+            this.passTest.Name = "passTest";
+            this.passTest.Size = new System.Drawing.Size(666, 105);
+            this.passTest.TabIndex = 0;
+            this.passTest.Text = "Пройти тест";
+            this.passTest.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // createTest
             // 
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button2.Location = new System.Drawing.Point(139, 242);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(554, 58);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Пройти тест";
-            this.button2.UseVisualStyleBackColor = true;
+            this.createTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.createTest.Location = new System.Drawing.Point(56, 202);
+            this.createTest.Name = "createTest";
+            this.createTest.Size = new System.Drawing.Size(666, 105);
+            this.createTest.TabIndex = 1;
+            this.createTest.Text = "Создать тест";
+            this.createTest.UseVisualStyleBackColor = true;
+            this.createTest.Click += new System.EventHandler(this.createTest_Click);
             // 
-            // button3
+            // CloseButton
             // 
-            this.button3.Location = new System.Drawing.Point(675, 385);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "Отмена";
-            this.button3.UseVisualStyleBackColor = true;
+            this.CloseButton.Location = new System.Drawing.Point(656, 368);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(128, 30);
+            this.CloseButton.TabIndex = 2;
+            this.CloseButton.Text = "Выйти";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
-            // Form2
+            // panel1
+            // 
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel1.Controls.Add(this.createTest);
+            this.panel1.Controls.Add(this.CloseButton);
+            this.panel1.Controls.Add(this.passTest);
+            this.panel1.Location = new System.Drawing.Point(4, 37);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(793, 401);
+            this.panel1.TabIndex = 3;
+            // 
+            // StartPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Name = "Form2";
-            this.Text = "Form2";
+            this.Controls.Add(this.panel1);
+            this.MinimizeBox = false;
+            this.Name = "StartPage";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "StartPage";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button passTest;
+        private System.Windows.Forms.Button createTest;
+        private System.Windows.Forms.Button CloseButton;
+        private System.Windows.Forms.Panel panel1;
     }
 }

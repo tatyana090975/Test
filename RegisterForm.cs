@@ -61,7 +61,7 @@ namespace Test
             String division = divisionField.Text;
             String login = loginUserField.Text;
             String pass = passwordUserField.Text;
-
+            //Проверка заполненности полей
             if (name == "" || surname == "" || secondname == "" || position == "" || division == "" || login == "" || pass == "")
             {
                 MessageBox.Show("Заполните все поля!");
@@ -70,20 +70,17 @@ namespace Test
 
             DB db = new DB();
             db.openConnection();
-
-            
-
+            //Проверка логина на наличие в бд, чтобы не было одинаковых логинов
             DataTable table = new DataTable();
             
             MySqlDataAdapter adapter = new MySqlDataAdapter();
 
             MySqlCommand command5 = new MySqlCommand("SELECT * FROM `users` WHERE `users_login` = @lU", db.GetConnection());
             command5.Parameters.Add("@lU", MySqlDbType.VarChar).Value = login;
-            //command5.Parameters.Add("@pU", MySqlDbType.VarChar).Value = pass;
-
+            
             adapter.SelectCommand = command5;
             adapter.Fill(table);
-
+            
             if (table.Rows.Count > 0)
             {
                 MessageBox.Show("Логин занят, придумайте другой логин.");
@@ -91,13 +88,14 @@ namespace Test
             }
             else
             {
+                //Сохранение логина и пароля в таблицу users
                 MySqlCommand command = new MySqlCommand("INSERT INTO `users` (`users_login`, `users_password`) VALUES (@login,@password)", db.GetConnection());
                 command.Parameters.Add("@login", MySqlDbType.VarChar).Value = loginUserField.Text;
                 command.Parameters.Add("@password", MySqlDbType.VarChar).Value = passwordUserField.Text;
 
                 adapter.SelectCommand = command;
                 adapter.Fill(table);
-
+                //Сохранение данных пользователя в таблицу person
                 DataTable table1 = new DataTable();
 
                 MySqlDataAdapter adapter1 = new MySqlDataAdapter();
@@ -129,7 +127,7 @@ namespace Test
                 MessageBox.Show("Регистрация прошла успешно!");
                 Close();
             }
-        }
+        }        
     }
 }
 

@@ -51,18 +51,18 @@
             this.nameField.Location = new System.Drawing.Point(286, 68);
             this.nameField.Name = "nameField";
             this.nameField.Size = new System.Drawing.Size(334, 20);
-            this.nameField.TabIndex = 0;
+            this.nameField.TabIndex = 0;            
             // 
             // surnameField
             // 
-            this.surnameField.Location = new System.Drawing.Point(286, 108);
+            this.surnameField.Location = new System.Drawing.Point(286, 147);
             this.surnameField.Name = "surnameField";
             this.surnameField.Size = new System.Drawing.Size(334, 20);
             this.surnameField.TabIndex = 1;
             // 
             // secondNameField
             // 
-            this.secondNameField.Location = new System.Drawing.Point(286, 147);
+            this.secondNameField.Location = new System.Drawing.Point(286, 108);
             this.secondNameField.Name = "secondNameField";
             this.secondNameField.Size = new System.Drawing.Size(334, 20);
             this.secondNameField.TabIndex = 2;
@@ -79,7 +79,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(153, 115);
+            this.label2.Location = new System.Drawing.Point(153, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 6;
@@ -88,7 +88,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(155, 154);
+            this.label3.Location = new System.Drawing.Point(153, 115);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(54, 13);
             this.label3.TabIndex = 7;
@@ -171,7 +171,7 @@
             this.divisionField.Location = new System.Drawing.Point(286, 231);
             this.divisionField.Name = "divisionField";
             this.divisionField.Size = new System.Drawing.Size(334, 21);
-            this.divisionField.TabIndex = 16;            
+            this.divisionField.TabIndex = 16;
             // 
             // positionField
             // 
@@ -179,7 +179,7 @@
             this.positionField.Location = new System.Drawing.Point(286, 189);
             this.positionField.Name = "positionField";
             this.positionField.Size = new System.Drawing.Size(334, 21);
-            this.positionField.TabIndex = 17;            
+            this.positionField.TabIndex = 17;
             // 
             // RegisterForm
             // 
@@ -203,6 +203,7 @@
             this.Controls.Add(this.surnameField);
             this.Controls.Add(this.nameField);
             this.Name = "RegisterForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Окно регистрации";
             this.Load += new System.EventHandler(this.RegisterForm_Load);
             this.ResumeLayout(false);

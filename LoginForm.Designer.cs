@@ -86,7 +86,7 @@
             this.passField.Name = "passField";
             this.passField.Size = new System.Drawing.Size(242, 31);
             this.passField.TabIndex = 3;
-            this.passField.UseSystemPasswordChar = true;  
+            this.passField.UseSystemPasswordChar = true;
             // 
             // ButtonLogin
             // 
@@ -149,7 +149,7 @@
             this.Controls.Add(this.ButtonLogin);
             this.Name = "LoginForm";
             this.Text = "Авторизация";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;           
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
