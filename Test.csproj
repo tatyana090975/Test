@@ -152,6 +152,12 @@
     <Compile Include="TestsList.Designer.cs">
       <DependentUpon>TestsList.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserResaltForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserResaltForm.Designer.cs">
+      <DependentUpon>UserResaltForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="CreateQuestion.resx">
       <DependentUpon>CreateQuestion.cs</DependentUpon>
     </EmbeddedResource>

@@ -199,6 +199,53 @@ namespace Test
             return pbNum;
         }
 
-        
+        private void EndTestButton_Click(object sender, EventArgs e)
+        {
+            //Проверка заполнена ли радиокнопка            
+            bool isSelected = false;
+
+            foreach (var control in RadioButtonsGroupBox.Controls)
+            {
+                if (control is RadioButton)
+                {
+                    RadioButton radioButton = (RadioButton)control;
+                    if (radioButton.Checked) { isSelected = true; break; }
+                }
+            }
+            if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
+
+            //Проверка равен ли 1 labelCor соответствующего label
+            if (RadioButtonsGroupBoxCheced() == "1")
+            {
+                //Если "ДА", то добавление 1 в таблицу passtest столбец passtest_corransw
+                DB dB = new DB();
+                dB.openConnection();
+
+                DataTable dt = new DataTable();
+                MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+                MySqlCommand cmd = new MySqlCommand("SELECT MAX(passtest_id) FROM passtest", dB.GetConnection());
+
+                adapter.SelectCommand = cmd;
+                adapter.Fill(dt);
+                DataRow dataRow = dt.Rows[0];
+                int passId = (int)dataRow[0];
+
+                DataTable dt2 = new DataTable();
+
+                MySqlDataAdapter adapter2 = new MySqlDataAdapter();
+
+                MySqlCommand cmd1 = new MySqlCommand("UPDATE passtest SET passtest_corransw = passtest_corransw + 1 WHERE passtest_id = @id", dB.GetConnection());
+                cmd1.Parameters.AddWithValue("@id", passId);
+
+                adapter2.SelectCommand = cmd1;
+                adapter2.Fill(dt2);
+
+                dB.closeConnection();
+            }
+            Close();
+            UserResaltForm userResaltForm = new UserResaltForm();
+            userResaltForm.Show();
+        }
     }
 }

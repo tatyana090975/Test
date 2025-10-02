@@ -271,7 +271,8 @@
             this.EndTestButton.TabIndex = 3;
             this.EndTestButton.Text = "Завершить тест";
             this.EndTestButton.UseVisualStyleBackColor = true;
-            this.EndTestButton.Visible = false;            
+            this.EndTestButton.Visible = false;
+            this.EndTestButton.Click += new System.EventHandler(this.EndTestButton_Click);
             // 
             // QuestionForm
             // 
