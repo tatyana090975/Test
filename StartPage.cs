@@ -34,5 +34,13 @@ namespace Test
                 Application.Exit();
             }            
         }
+
+        private void passTest_Click(object sender, EventArgs e)
+        {
+            //Закрыть текщее окно и открыть форму TestList
+            this.Hide();
+            TestsList testsList = new TestsList();
+            testsList.Show();
+        }
     }
 }

@@ -13,6 +13,9 @@ namespace Test
 {
     public partial class LoginForm : Form
     {
+        //Поле для вычисления текущего пользователя приложения
+        public static LoginForm Instance { get; set; }
+        public int userId { get; set; }
         public LoginForm()
         {
             InitializeComponent();            
@@ -24,12 +27,13 @@ namespace Test
             form4.Show();
             linkLabel1.LinkVisited = true;
         }
-
+        //Вход в приложение
         private void ButtonLogin_Click(object sender, EventArgs e)
-        {
+        {            
             //Кнопка "ОК"
             String loginUser = loginField.Text;
             String passUser = passField.Text;
+            
 
             DB db = new DB();
 
@@ -37,7 +41,7 @@ namespace Test
 
             MySqlDataAdapter adapter = new MySqlDataAdapter();
             //Сравнение введенного логина и пароля с данными в базе (таблица users)
-            MySqlCommand command = new MySqlCommand("SELECT * FROM `users` WHERE `users_login` = @lU AND `users_password` = @pU", db.GetConnection());
+            MySqlCommand command = new MySqlCommand("SELECT `users_id` FROM `users` WHERE `users_login` = @lU AND `users_password` = @pU", db.GetConnection());
             command.Parameters.Add("@lU", MySqlDbType.VarChar).Value = loginUser;
             command.Parameters.Add("@pU", MySqlDbType.VarChar).Value = passUser;
             
@@ -46,6 +50,12 @@ namespace Test
 
             if (table.Rows.Count > 0)
             {
+                //Присвоение значения полю текущего пользователя
+                DataRow dr = table.Rows[0];
+                userId = (int)dr[0];
+                Instance = this;
+
+                //Открытие стартовой страницы приложения
                 this.Hide();
                 StartPage startPage = new StartPage();
                 startPage.Show();

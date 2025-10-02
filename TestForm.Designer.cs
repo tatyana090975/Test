@@ -33,8 +33,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ContinueButton = new System.Windows.Forms.Button();
             this.CloseButton = new System.Windows.Forms.Button();
+            this.ContinueButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +74,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(452, 88);
+            this.label4.Location = new System.Drawing.Point(432, 88);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 16);
             this.label4.TabIndex = 3;
@@ -90,6 +90,16 @@
             this.panel1.Size = new System.Drawing.Size(227, 44);
             this.panel1.TabIndex = 4;
             // 
+            // CloseButton
+            // 
+            this.CloseButton.Location = new System.Drawing.Point(3, 3);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(88, 23);
+            this.CloseButton.TabIndex = 1;
+            this.CloseButton.Text = "Отмена";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
+            // 
             // ContinueButton
             // 
             this.ContinueButton.Location = new System.Drawing.Point(119, 3);
@@ -99,15 +109,6 @@
             this.ContinueButton.Text = "Продолжить";
             this.ContinueButton.UseVisualStyleBackColor = true;
             this.ContinueButton.Click += new System.EventHandler(this.ContinueButton_Click);
-            // 
-            // CloseButton
-            // 
-            this.CloseButton.Location = new System.Drawing.Point(3, 3);
-            this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(88, 23);
-            this.CloseButton.TabIndex = 1;
-            this.CloseButton.Text = "Отмена";
-            this.CloseButton.UseVisualStyleBackColor = true;
             // 
             // TestForm
             // 

@@ -44,6 +44,7 @@
             this.passTest.TabIndex = 0;
             this.passTest.Text = "Пройти тест";
             this.passTest.UseVisualStyleBackColor = true;
+            this.passTest.Click += new System.EventHandler(this.passTest_Click);
             // 
             // createTest
             // 
