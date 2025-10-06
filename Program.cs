@@ -16,9 +16,9 @@ namespace Test
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new LoginForm());
+            Application.Run(new LoginForm());
             //Application.Run(new TestsList());
-            Application.Run(new GeneralTestResultForm());
+            //Application.Run(new GeneralTestResultForm());
         }
     }
 }

@@ -19,24 +19,13 @@ namespace Test
             InitializeComponent();
             TestListFill();
         }
-        private DataTable TestListFill()
+        private void TestListFill()
         {
             //Заполнение грида данными из базы данных
-            DB db = new DB();
-            db.openConnection();
+            DBQueries dBQueries = new DBQueries();
+            nametestDataGridView.DataSource = dBQueries.LoadTests();
 
-            DataTable table = new DataTable();
-
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-            MySqlCommand command = new MySqlCommand("SELECT * FROM nametest", db.GetConnection());
-
-            adapter.SelectCommand = command;
-            adapter.Fill(table);                       
-
-            nametestDataGridView.DataSource = table;
-            
-            return table;
+            //return table;
         }
 
         private void CloseButton_Click(object sender, EventArgs e)
@@ -51,8 +40,8 @@ namespace Test
         }
 
         public void OkButton_Click(object sender, EventArgs e)
-        {            
-            int currenRow = nametestDataGridView.CurrentRow.Index + 1;
+        {
+            int currenRow = (int)nametestDataGridView.CurrentRow.Cells[0].Value;
             TestForm testForm = new TestForm(currenRow);
             testForm.Show();
         }

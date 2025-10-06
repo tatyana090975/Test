@@ -15,36 +15,27 @@ namespace Test
 {
     public partial class RegisterForm : Form
     {
+        private List<Tuple<int, string>> positionList {  get; set; }
+        private List<Tuple<int, string>> divisionList { get; set; }
         public RegisterForm()
         {
             InitializeComponent();            
         }
 
         private void RegisterForm_Load(object sender, EventArgs e)
-        {            
-            DB db = new DB();
-            db.openConnection();
+        {          
+            DBQueries dB = new DBQueries();
+            positionList = dB.LoadPositionList().AsEnumerable().Select(row => new Tuple<int, string>((int)row[0], row[1].ToString())).ToList();
+            positionField.DataSource = positionList;
+            positionField.DisplayMember = "Item2";
+            positionField.ValueMember = "Item1";
+            positionField.SelectedIndex = -1;
 
-            MySqlCommand commandPos = new MySqlCommand("SELECT `position_name` FROM `position`", db.GetConnection());
-
-            MySqlDataReader readerPos = commandPos.ExecuteReader();
-
-            while (readerPos.Read())
-            {
-                positionField.Items.Add(readerPos.GetString("position_name"));
-            }
-            readerPos.Close();
-            MySqlCommand commandDiv = new MySqlCommand("SELECT `division_name` FROM `division`", db.GetConnection());
-
-            MySqlDataReader readerDiv = commandDiv.ExecuteReader();
-
-            while (readerDiv.Read())
-            {
-                divisionField.Items.Add(readerDiv.GetString("division_name"));
-            }
-            readerDiv.Close();
-
-            db.closeConnection();
+            divisionList = dB.LoadDivisionList().AsEnumerable().Select(row => new Tuple<int, string>((int)row[0], row[1].ToString())).ToList();
+            divisionField.DataSource = divisionList;
+            divisionField.DisplayMember = "Item2";
+            divisionField.ValueMember = "Item1";
+            divisionField.SelectedIndex = -1;            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -59,8 +50,11 @@ namespace Test
             String secondname = secondNameField.Text;
             String position = positionField.Text;
             String division = divisionField.Text;
+            Int32 positionNum = (int)positionField.SelectedValue;
+            Int32 divisionNum = (int)divisionField.SelectedValue;
             String login = loginUserField.Text;
             String pass = passwordUserField.Text;
+            DBQueries dBQueries = new DBQueries();  
             //Проверка заполненности полей
             if (name == "" || surname == "" || secondname == "" || position == "" || division == "" || login == "" || pass == "")
             {
@@ -68,24 +62,20 @@ namespace Test
                 return;
             }
 
-            DB db = new DB();
-            db.openConnection();
-            //Проверка логина на наличие в бд, чтобы не было одинаковых логинов
-            DataTable table = new DataTable();
-            
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-            MySqlCommand command5 = new MySqlCommand("SELECT * FROM `users` WHERE `users_login` = @lU", db.GetConnection());
-            command5.Parameters.Add("@lU", MySqlDbType.VarChar).Value = login;
-            
-            adapter.SelectCommand = command5;
-            adapter.Fill(table);
-            
-            if (table.Rows.Count > 0)
+            var result = LoginForm.loginPasswordList.Any(t => t.Item2 == login);
+            if (result == true)
             {
                 MessageBox.Show("Логин занят, придумайте другой логин.");
-                return;
             }
+            else
+            {
+                DB dB = new DB();
+                dBQueries.SaveNewUser(name, surname, secondname, positionNum,divisionNum, login, pass);
+                MessageBox.Show("Регистрация прошла успешно!");
+                Close();
+            }
+            //DB dB = new DB();
+            /*
             else
             {
                 //Сохранение логина и пароля в таблицу users
@@ -126,7 +116,7 @@ namespace Test
 
                 MessageBox.Show("Регистрация прошла успешно!");
                 Close();
-            }
+            }*/
         }        
     }
 }

@@ -40,22 +40,14 @@ namespace Test
                 MessageBox.Show("Заполните наименование!");
                 return;
             }
-            DB db = new DB();
-            db.openConnection();
-            //Сохранение наименовния теста в таблицу nametest
-            DataTable table = new DataTable();
-
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-            MySqlCommand command = new MySqlCommand("INSERT INTO `nametest` (`nametest_name`) VALUES (@name)", db.GetConnection());
-            command.Parameters.Add("@name", MySqlDbType.VarChar).Value = nameTestBox.Text;
-
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-
-            this.Hide();
-            CreateQuestion createQuestion = new CreateQuestion();
-            createQuestion.Show();
+            else
+            {
+                DBQueries dbQueries = new DBQueries();
+                dbQueries.CreateTestName(nametest);
+                this.Hide();
+                CreateQuestion createQuestion = new CreateQuestion();
+                createQuestion.Show();
+            }                
         }        
     }
 }

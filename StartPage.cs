@@ -42,5 +42,12 @@ namespace Test
             TestsList testsList = new TestsList();
             testsList.Show();
         }
+
+        private void ResultButton_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            GeneralTestResultForm generalTestResultForm = new GeneralTestResultForm();
+            generalTestResultForm.Show();
+        }
     }
 }

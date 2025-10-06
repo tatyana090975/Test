@@ -105,8 +105,8 @@ namespace Test
                 }
             }
             if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
-
-            //Проверка равен ли 1 labelCor соответствующего label
+            /*
+            //Проверка равен ли единице labelCor соответствующего label
             if (RadioButtonsGroupBoxCheced() == "1")
             {
                 //Если "ДА", то добавление 1 в таблицу passtest столбец passtest_corransw
@@ -149,7 +149,7 @@ namespace Test
                 newForm.ShowDialog();
                 
                 this.Close();
-            }
+            }*/
         }
         //Кнопка "Отмена"
         private void CloseButton_Click(object sender, EventArgs e)
@@ -214,6 +214,8 @@ namespace Test
             }
             if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
 
+            SaveQuestion();
+            /*
             //Проверка равен ли 1 labelCor соответствующего label
             if (RadioButtonsGroupBoxCheced() == "1")
             {
@@ -242,10 +244,46 @@ namespace Test
                 adapter2.Fill(dt2);
 
                 dB.closeConnection();
-            }
-            Close();
+            }*/
+            this.Hide();
             UserResaltForm userResaltForm = new UserResaltForm();
             userResaltForm.Show();
         }
+        private void SaveQuestion()
+        {
+            //Проверка равен ли единице labelCor соответствующего label
+            if (RadioButtonsGroupBoxCheced() == "1")
+            {
+                //Если "ДА", то добавление 1 в таблицу passtest столбец passtest_corransw
+                DB dB = new DB();
+                dB.openConnection();
+
+                DataTable dt = new DataTable();
+                MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+                MySqlCommand cmd = new MySqlCommand("SELECT MAX(passtest_id) FROM passtest", dB.GetConnection());
+
+                adapter.SelectCommand = cmd;
+                adapter.Fill(dt);
+                DataRow dataRow = dt.Rows[0];
+                int passId = (int)dataRow[0];
+
+                DataTable dt2 = new DataTable();
+
+                MySqlDataAdapter adapter2 = new MySqlDataAdapter();
+
+                MySqlCommand cmd1 = new MySqlCommand("UPDATE passtest SET passtest_corransw = passtest_corransw + 1 WHERE passtest_id = @id", dB.GetConnection());
+                cmd1.Parameters.AddWithValue("@id", passId);
+
+                adapter2.SelectCommand = cmd1;
+                adapter2.Fill(dt2);
+
+                dB.closeConnection();
+            }
+            else
+            {
+
+            }
+        }    
     }
 }

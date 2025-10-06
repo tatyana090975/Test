@@ -59,7 +59,7 @@ namespace Test
 
         private void ContinueButton_Click(object sender, EventArgs e)
         {
-            if (LoginForm.Instance != null)
+           /* if (LoginForm.Instance != null)
             {
                 int userID = LoginForm.Instance.userId;
                 //Получения списка вопросов в текущем тесте
@@ -109,7 +109,7 @@ namespace Test
                     questionForm.Show();
                     return;
                 }
-            }
+            }*/
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

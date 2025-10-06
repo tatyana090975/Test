@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="DatabaseSettings.cs" />
     <Compile Include="DB.cs" />
+    <Compile Include="DBQueries.cs" />
     <Compile Include="GeneralTestResultForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -125,7 +125,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "TestsList";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TestsList";
+            this.Text = "Список тестов";
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
