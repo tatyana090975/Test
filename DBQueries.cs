@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,8 +12,8 @@ namespace Test
 {
     internal class DBQueries
     {
-
-        public DataTable LoadLoginList()
+        //Загрузка списка пользователей в поле loginPasswordList LoginForm
+        public static DataTable LoadLoginList()
         {
             DB dB = new DB();
             dB.openConnection();
@@ -24,8 +25,8 @@ namespace Test
             dB.closeConnection();
             return table;            
         }
-        //Загрузка для заполнения списка positionList
-        public DataTable LoadPositionList()
+        //Загрузка для заполнения списка positionList RegisterForm
+        public static DataTable LoadPositionList()
         {
             DB dB = new DB();
             dB.openConnection();
@@ -37,8 +38,8 @@ namespace Test
             dB.closeConnection();
             return table;
         }
-        //Загрузка для заполнения списка divisionList
-        public DataTable LoadDivisionList()
+        //Загрузка для заполнения списка divisionList RegisterForm
+        public static DataTable LoadDivisionList()
         {
             DB dB = new DB();
             dB.openConnection();
@@ -50,7 +51,8 @@ namespace Test
             dB.closeConnection();
             return table;
         }
-        public void SaveNewUser(string name, string surname, string secondname, int position, int division, string login, string pass)
+        // Сохранение в базу данных нового пользователя в таблицы users и person
+        public static void SaveNewUser(string name, string surname, string secondname, int position, int division, string login, string pass)
         {
             DB dB = new DB();
             dB.openConnection();
@@ -85,7 +87,8 @@ namespace Test
             adapter1.SelectCommand = command1;
             adapter1.Fill(table1);
         }
-        public void CreateTestName(string name)
+        //Создание нового наименования теста в таблице nametest
+        public static void CreateTestName(string name)
         {
             DB dB = new DB();
             DataTable table = new DataTable();
@@ -97,7 +100,8 @@ namespace Test
             adapter2.Fill(table);
             dB.closeConnection();
         }
-        public void SaveQuestion(string question, string ans1, string ans2, string ans3, string ans4, int rb1, int rb2, int rb3, int rb4)
+        //Сохранение вопроса и ответов на него в таблицы question и answer
+        public static void SaveQuestion(string question, string ans1, string ans2, string ans3, string ans4, int rb1, int rb2, int rb3, int rb4)
         {
             DB db = new DB();
             db.openConnection();
@@ -168,7 +172,9 @@ namespace Test
             adapter4.Fill(table4);
             db.closeConnection();
         }
-        public void DeleteTestName()
+        //Каскадное удаление наименования теста, вопросов и ответов к нему при нажатии
+        //кнопки "Отмена" в процессе создания очередного вопроса теста
+        public static void DeleteTestName()
         {
             DB dB = new DB();
             dB.openConnection();
@@ -185,7 +191,8 @@ namespace Test
             adapter.Fill(table1);
             dB.closeConnection();
         }
-        public DataTable LoadTests()
+        //Заполнение данными (списком тестов) грида формы TestsList
+        public static DataTable LoadTests()
         {
             DB db = new DB();
             db.openConnection();
@@ -200,6 +207,105 @@ namespace Test
             adapter.Fill(table);
             db.closeConnection();
             return table;            
+        }
+        //Загрузка данных (вопросов и ответов к ним) по выбранному тесту в поле CurrentTest формы TestForm
+        public static DataTable LoadCurrentTest(int a, int b)
+        {
+            DB dB = new DB();
+            dB.openConnection();
+            DataTable table = new DataTable();
+            int testId = a;
+            int userId = b;
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+
+            MySqlCommand command = new MySqlCommand(@"
+                SELECT 
+                    @ui AS user_id,
+                    q.question_testId, 
+                    q.question_id, 
+                    q.question_text, 
+                    a.answer_id, 
+                    a.answer_1, 
+                    a.answer_correct 
+                FROM question q 
+                INNER JOIN answer a ON q.question_id = a.answer_questId 
+                WHERE q.question_testId = @ti", dB.GetConnection());
+            command.Parameters.AddWithValue("@ti", testId);
+            command.Parameters.AddWithValue("@ui", userId);
+            adapter.SelectCommand = command;
+            adapter.Fill(table);            
+
+            dB.closeConnection();
+            return table;            
+        }
+        //Создание строки для регистрации результатов прохождения теста в таблице passtets базы данных
+        //при загрузке формы TestForm
+        public static int AddToPasstest(int usId, int testId, int countQuest)
+        {            
+            DB db = new DB();
+            db.openConnection();
+            DataTable table = new DataTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            MySqlCommand command = new MySqlCommand("INSERT INTO passtest(passtest_user, passtest_testId, passtest_corransw, passtest_countquest) VALUES (@ui, @ti, 0, @cq)", db.GetConnection());
+            command.Parameters.AddWithValue("@ui", usId);
+            command.Parameters.AddWithValue("@ti", testId);
+            command.Parameters.AddWithValue("@cq", countQuest);
+            adapter.SelectCommand = command;
+            adapter.Fill(table);
+            DataTable table1 = new DataTable();
+            MySqlDataAdapter adapter1 = new MySqlDataAdapter();
+            MySqlCommand command1 = new MySqlCommand("SELECT MAX(passtest_id) FROM passtest", db.GetConnection());
+            adapter1.SelectCommand = command1;
+            adapter1.Fill(table1);
+            int passtestId = (int)command1.ExecuteScalar();
+            db.closeConnection();
+            return passtestId;
+            
+        }
+        //Отражение результата (верный или нет ответ) в созданной ранее строке таблицы passtest
+        //базы данных при нажатии кнопки "ОК" формы QuestionForm
+        public static void PasstestUpdate(int passId)
+        {
+            DB db = new DB();
+            DataTable dt2 = new DataTable();
+
+            MySqlDataAdapter adapter2 = new MySqlDataAdapter();
+
+            MySqlCommand cmd1 = new MySqlCommand("UPDATE passtest SET passtest_corransw = passtest_corransw + 1 WHERE passtest_id = @id", db.GetConnection());
+            cmd1.Parameters.AddWithValue("@id", passId);
+
+            adapter2.SelectCommand = cmd1;
+            adapter2.Fill(dt2);
+            db.closeConnection();
+        }
+        //Прекращение прохождения теста и удаление данных о прохождении из базы данных
+        public static void StopPassTest()
+        {
+            DB dB = new DB();
+            dB.openConnection();
+
+            DataTable dt = new DataTable();
+
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            MySqlCommand cmd = new MySqlCommand("DELETE FROM passtest ORDER BY passtest_id DESC LIMIT 1", dB.GetConnection());
+
+            adapter.SelectCommand = cmd;
+            adapter.Fill(dt);
+        }
+        //Запрос результатов прохождения теста пользователем и ФИО пользователя
+        public static DataTable GetUserResaltData(int passtestId)
+        {
+            //Запрашиваем данные из таблицы результатов прохождения теста passtest
+            DB dB = new DB();
+            dB.openConnection();
+
+            DataTable dt = new DataTable();
+            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            MySqlCommand command = new MySqlCommand("SELECT p.person_name, p.person_secondname, p.person_surname, pt.passtest_corransw, pt.passtest_countquest FROM person p INNER JOIN passtest pt ON p.person_login = pt.passtest_user WHERE pt.passtest_id = @pti", dB.GetConnection());
+            command.Parameters.AddWithValue("@pti", passtestId);
+            adapter.SelectCommand = command;
+            adapter.Fill(dt);
+            return dt;            
         }
     }
 }

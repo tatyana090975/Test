@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Relational;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,103 +14,63 @@ namespace Test
 {
     public partial class TestForm : Form
     {
-        public static int CountQuest {  get; set; }
+        //Свойство для загрузки вопросов к выбранному тесту и ответов к ним
+        public static List<Tuple<int, int, int, string, int, string, int>> CurrentTest {  get; set; }
+        //
         public static int c {  get; set; }
+        //Свойство для сохранения количества вопросов
+        public static int quantityQuestion { get; set; }
+        //поле для сохранения id новой строки прохождения теста в таблице passtest
+        public static int passtestId { get; set; } 
         public TestForm(int b)
         {
             InitializeComponent();
             c = b;
-            LoadTestForm(b);
+            LoadTestForm(c);
         }
+        //Создание списка вопросов и ответов к выбранному тесту и загрузка его в свойство  CurrentTest
         protected void LoadTestForm(int a)
-        {            
-            //Получение наименования теста из TestsList
-            int c = a;
-            DB db = new DB();
-            db.openConnection();
+        {
+            int userId = LoginForm.userId;
+            int testId = a;
+            DataTable table = DBQueries.LoadCurrentTest(testId, userId);            
+            
+            CurrentTest = table.AsEnumerable()
+                .Select(row => new Tuple<int, int, int, string, int, string, int>(
+                Convert.ToInt32(row[0]),
+                Convert.ToInt32(row[1]),
+                Convert.ToInt32(row[2]),
+                row[3].ToString(),
+                Convert.ToInt32(row[4]),
+                row[5].ToString(),
+                Convert.ToInt32(row[6]))).ToList();
 
-            DataTable table = new DataTable();
-
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT nametest_name FROM nametest WHERE nametest_id = @b", db.GetConnection());
-            command.Parameters.AddWithValue("@b", c);
-
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-            //Получение наименования теста для заголовка формы
-            string res = "";
-            if (table.Rows.Count > 0) { res = table.Rows[0]["nametest_name"].ToString(); }
-            label1.Text = res;
-            //Получение списка вопросов для указания количества вопросов в тесте
-            DataTable dt = new DataTable();
-
-            MySqlDataAdapter adapter1 = new MySqlDataAdapter();
-            MySqlCommand command1 = new MySqlCommand("SELECT * FROM question WHERE question_testId = @c", db.GetConnection());
-            command1.Parameters.AddWithValue("@c", c);
-
-            adapter1.SelectCommand = command1;
-            adapter1.Fill(dt);
             //Вычисляется количество вопросов в тесте
-            int count = dt.Rows.Count;
-            CountQuest = count;
+            quantityQuestion = table.Rows.Count / 4;
             //Открытие формы TestForm
-            label3.Text = count.ToString();
-            db.closeConnection();            
+            label3.Text = quantityQuestion.ToString();
+            passtestId = DBQueries.AddToPasstest(userId, testId, quantityQuestion);
         }
-
+        //Переход к формированию вопроса теста
         private void ContinueButton_Click(object sender, EventArgs e)
         {
-           /* if (LoginForm.Instance != null)
+            this.Hide();
+            var groupedQuestions = CurrentTest
+                .GroupBy(item => item.Item3)  // Группируем по id вопроса
+                .ToList();
+
+            // Получить список всех уникальных ID вопросов
+            List<int> questionIds = groupedQuestions
+                .Select(group => group.Key)
+                .ToList();
+
+            // Обработка каждой группы
+            foreach (int questionId in questionIds)
             {
-                int userID = LoginForm.Instance.userId;
-                //Получения списка вопросов в текущем тесте
-                DB db = new DB();
-                db.openConnection();
-
-                DataTable table = new DataTable();
-                MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-
-                MySqlCommand command2 = new MySqlCommand("SELECT * FROM question WHERE question_testId = @d", db.GetConnection());
-                command2.Parameters.AddWithValue("@d", c);
-
-                adapter2.SelectCommand = command2;
-
-                adapter2.Fill(table);
-
-                int count = table.Rows.Count; //количество вопросов в тесте
-                //Добавление строки сведений о прохождении теста в таблицу passtest
-                DataTable dt1 = new DataTable();
-                MySqlDataAdapter adapter1 = new MySqlDataAdapter();
-
-                MySqlCommand command1 = new MySqlCommand("INSERT INTO passtest (passtest_user, passtest_testId, passtest_corransw, passtest_countquest) VALUES (@ui, @ti, @ca, @cq)", db.GetConnection());
-                command1.Parameters.AddWithValue("@ui", userID);
-                command1.Parameters.AddWithValue("@ti", c);
-                command1.Parameters.AddWithValue("@ca", 0);
-                command1.Parameters.AddWithValue("@cq", count);
-
-                adapter1.SelectCommand = command1;
-                adapter1.Fill(dt1);
-                db.closeConnection();
-
-                //стартовать первый вопрос                
-                //DataRow dataRow = table.Rows[0];
-
-                if (count > 1)
-                {
-                    this.Hide();
-                    QuestionForm questionForm = new QuestionForm(table);
-                    questionForm.Show();
-                    return;
-                }
-                else
-                {
-                    this.Hide();
-                    QuestionForm questionForm = new QuestionForm(table);
-                    questionForm.ButtonsVisibility();
-                    questionForm.Show();
-                    return;
-                }
-            }*/
+                QuestionForm questionForm = new QuestionForm(questionId);
+                questionForm.Show();
+                return;
+            }
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

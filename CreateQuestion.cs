@@ -15,30 +15,26 @@ namespace Test
 {
     public partial class CreateQuestion : Form
     {
-
-        String testName {  get; set; }
+        //String testName {  get; set; }
         public CreateQuestion()
         {
             InitializeComponent();
-        }
-
-        
-
+        }        
+        //Выход из процесса создания теста с удалением уже внесенных в базу данных сведений
         private void canselButton_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Вы действительно хотите оказаться от создания теста?", "", MessageBoxButtons.YesNo);
             if (result == DialogResult.Yes)
             {
-                //Каскадное удаление нвзвания теста, созанных вопросов и ответов
-                DBQueries dBQueries = new DBQueries();
-                dBQueries.DeleteTestName();
+                //Каскадное удаление нвзвания теста, созанных вопросов и ответов                
+                DBQueries.DeleteTestName();
                 //Закрыть окно создания вопроса и открыть стартовую страницу
                 this.Hide();
                 StartPage startPage = new StartPage();
                 startPage.Show();
             }
         }
-
+        //Сохранение в базу данных вопроса и ответов к нему
         private void saveButton_Click(object sender, EventArgs e)
         {    
             //Проверка заполненности всех полей формы
@@ -70,9 +66,8 @@ namespace Test
             }
             if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
             
-            //Сохрание вопроса и ответов к нему в сооветствующие таблицы
-            DBQueries dBQueries = new DBQueries();
-            dBQueries.SaveQuestion(question, ans1, ans2, ans3, ans4, rb1, rb2, rb3, rb4);
+            //Сохрание вопроса и ответов к нему в сооветствующие таблицы            
+            DBQueries.SaveQuestion(question, ans1, ans2, ans3, ans4, rb1, rb2, rb3, rb4);
                
             //Диалог с пользователем о дальнейших действиях
             DialogResult res = MessageBox.Show("Вопрос успешно загружен.\n Хотите создать следующий вопрос?", "", MessageBoxButtons.YesNo);
@@ -87,7 +82,8 @@ namespace Test
                 MessageBox.Show("Нажмите кнопку \"Завершить создание теста\"");
             }            
         }
-
+        //Сохранение в базу данных последнего вопроса теста и завершение процесса создания теста,
+        //переход на стартовую страницу StartPage
         private void completeButton_Click(object sender, EventArgs e)
         {
             //Диалог с пользователем о дальнейших действиях
@@ -122,9 +118,8 @@ namespace Test
                     }
                 }
                 if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
-
-                DBQueries dBQueries = new DBQueries();
-                dBQueries.SaveQuestion(question, ans1, ans2, ans3, ans4, rb1, rb2, rb3, rb4);
+                
+                DBQueries.SaveQuestion(question, ans1, ans2, ans3, ans4, rb1, rb2, rb3, rb4);
                 this.Hide();
                 StartPage start = new StartPage();
                 start.Show();

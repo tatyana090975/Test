@@ -16,14 +16,14 @@ namespace Test
         {
             InitializeComponent();
         }
-
+        //Вызов процесса создания теста
         private void createTest_Click(object sender, EventArgs e)
         {
             this.Hide();
             NameTest nameTest = new NameTest();
             nameTest.Show();
         }
-
+        //Выход из программы
         private void CloseButton_Click(object sender, EventArgs e)
         {
             //Диалог с пользователем            
@@ -34,7 +34,7 @@ namespace Test
                 Application.Exit();
             }            
         }
-
+        //Вызов процесса прохождения теста
         private void passTest_Click(object sender, EventArgs e)
         {
             //Закрыть текщее окно и открыть форму TestList
@@ -42,7 +42,7 @@ namespace Test
             TestsList testsList = new TestsList();
             testsList.Show();
         }
-
+        //Просмотр результатов прохождения теста по пользователям
         private void ResultButton_Click(object sender, EventArgs e)
         {
             this.Hide();

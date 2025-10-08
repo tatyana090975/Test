@@ -15,73 +15,55 @@ namespace Test
 {
     public partial class QuestionForm : Form
     {
-        public static DataTable answTable {  get; set; }
+        //Свойство для перехода по количеству вопросов
+        //(QuestionForm должна открываться столько раз, сколько вопросов в тесте)
         private static int counter = 0;
-        private int total = 0;
-        public QuestionForm(DataTable table)
+        //Свойство для сохранения id вопросов от меньшего к большему (изменяется и позволяет перейти к следубщему вопросу)
+        private static int QI {  get; set; }
+        
+        public QuestionForm(int qi)
         {
             InitializeComponent();
-            answTable = table;
-            total = answTable.Rows.Count;
-            labelCounter.Text = $"Открытие: {counter}";
-            DataRow row = answTable.Rows[counter];
-            Load_QuestionForm(row);
-        }
 
-        public QuestionForm(int count):this(answTable)
+            Load_QuestionForm(qi);
+        }
+        public void Load_QuestionForm(int qi)
         {
-            counter = count;
-            labelCounter.Text = $"Открытие: {counter}";            
-        }
-
-        public void Load_QuestionForm(DataRow dr)
-        { 
-            if (counter == total - 1)
+            //Список кортежей для хранения вопроса и ответов к нему
+            List<Tuple<int, int, int, string, int, string, int>> tuples = GetQuestionGroup(qi);
+            
+            if (counter == TestForm.quantityQuestion - 1)
             {
                 ButtonsVisibility();
             }
+
             //Загрузка вопроса
-            int questId = (int)dr[0]; //id вопроса
-            string questText = (string)dr[2]; //текст вопроса
+            int questId = qi; //id вопроса
+            QI = questId;
+            string questText = tuples[0].Item4; //текст вопроса
             label.Text = questText;
 
             //Загрузка ответов и отметок корректности
-            DB dB = new DB();
-            dB.openConnection();
+            label1.Text = tuples[0].Item6;
+            labelCor1.Text = tuples[0].Item7.ToString();
 
-            DataTable table = new DataTable();
+            label2.Text = tuples[1].Item6;
+            labelCor2.Text = tuples[1].Item7.ToString();                      
 
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
+            label3.Text = tuples[2].Item6;
+            labelCor3.Text = tuples[2].Item7.ToString();            
 
-            MySqlCommand command = new MySqlCommand("SELECT answer_1, answer_correct FROM answer WHERE answer_questId = @qa", dB.GetConnection());
-            command.Parameters.AddWithValue("@qa", questId);
-
-            adapter.SelectCommand = command;
-            adapter.Fill(table);
-
-            DataRow row = table.Rows[0];
-
-            label1.Text = row[0].ToString();
-            labelCor1.Text = row[1].ToString();
-
-            row = table.Rows[1];
-
-            label2.Text = row[0].ToString();
-            labelCor2.Text = row[1].ToString();
-
-            row = table.Rows[2];
-
-            label3.Text = row[0].ToString();
-            labelCor3.Text = row[1].ToString();
-
-            row = table.Rows[3];
-
-            label4.Text = row[0].ToString();
-            labelCor4.Text = row[1].ToString();
-            dB.closeConnection();            
+            label4.Text = tuples[3].Item6;
+            labelCor4.Text = tuples[3].Item7.ToString();            
         }
-       
-        
+        public List<Tuple<int, int, int, string, int, string, int>> GetQuestionGroup(int questionId)
+        {
+            List<Tuple<int, int, int, string, int, string, int>> tuples = TestForm.CurrentTest
+                                        .Where(item => item.Item3 == questionId)
+                                        .ToList();
+            return tuples;
+        }
+
 
         //Метод для видимости кнопок
         public void ButtonsVisibility()
@@ -105,53 +87,31 @@ namespace Test
                 }
             }
             if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
-            /*
+            
             //Проверка равен ли единице labelCor соответствующего label
             if (RadioButtonsGroupBoxCheced() == "1")
             {
-                //Если "ДА", то добавление 1 в таблицу passtest столбец passtest_corransw
-                DB dB = new DB();
-                dB.openConnection();
-
-                DataTable dt = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-                MySqlCommand cmd = new MySqlCommand("SELECT MAX(passtest_id) FROM passtest", dB.GetConnection());
-                
-                adapter.SelectCommand = cmd;
-                adapter.Fill(dt);
-                DataRow dataRow = dt.Rows[0];
-                int passId = (int)dataRow[0];
-
-                DataTable dt2 = new DataTable();
-
-                MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-
-                MySqlCommand cmd1 = new MySqlCommand("UPDATE passtest SET passtest_corransw = passtest_corransw + 1 WHERE passtest_id = @id", dB.GetConnection());
-                cmd1.Parameters.AddWithValue("@id", passId);
-
-                adapter2.SelectCommand = cmd1;
-                adapter2.Fill(dt2);
-
-                dB.closeConnection();
-                
+                int c = TestForm.passtestId; 
+                DBQueries.PasstestUpdate(c);
+                QI = QI + 1;
                 counter = counter + 1;
-                QuestionForm newForm = new QuestionForm(counter);
+                QuestionForm newForm = new QuestionForm(QI);
                 newForm.ShowDialog();
                 counter = counter + 1;
-                this.Close();
+                this.Hide();
 
             }
             else
             {
+                QI = QI + 1;
                 counter = counter + 1;
-                QuestionForm newForm = new QuestionForm(counter);
+                QuestionForm newForm = new QuestionForm(QI);
                 newForm.ShowDialog();
                 
                 this.Close();
-            }*/
+            }
         }
-        //Кнопка "Отмена"
+        //Прекращение процесса прохождения теста пользователем и удаление данных из таблицы passtest
         private void CloseButton_Click(object sender, EventArgs e)
         {
             //Диалог с пользователем ДА-Нет
@@ -159,24 +119,15 @@ namespace Test
             //Если Да - то удаляем последнюю запись в таблице passtest и переходим на StartPage
             if (res == DialogResult.Yes)
             {
-                DB dB = new DB();
-                dB.openConnection();
-
-                DataTable dt = new DataTable();
-
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-                MySqlCommand cmd = new MySqlCommand("DELETE MAX(passtest_id) FROM passtest ", dB.GetConnection());
-
-                adapter.SelectCommand = cmd;
-                adapter.Fill(dt);
-
-                //переходим на StartPage
+                DBQueries.StopPassTest();
+                
+                //переходим на StartPage*/
                 this.Hide();
                 StartPage startPage = new StartPage();
                 startPage.Show();
             }
         }
-        //
+        //Преобразование результатов состояния радиокнопок из bool в text
         public string RadioButtonsGroupBoxCheced()
         {
             string pbNum = "";
@@ -198,7 +149,7 @@ namespace Test
             }
             return pbNum;
         }
-
+        //Завершение теста (кнопка видна только последнем вопросе теста)
         private void EndTestButton_Click(object sender, EventArgs e)
         {
             //Проверка заполнена ли радиокнопка            
@@ -214,76 +165,23 @@ namespace Test
             }
             if (!isSelected) { MessageBox.Show("Отметьте правильный ответ!"); return; }
 
-            SaveQuestion();
-            /*
+
             //Проверка равен ли 1 labelCor соответствующего label
             if (RadioButtonsGroupBoxCheced() == "1")
             {
-                //Если "ДА", то добавление 1 в таблицу passtest столбец passtest_corransw
-                DB dB = new DB();
-                dB.openConnection();
-
-                DataTable dt = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-                MySqlCommand cmd = new MySqlCommand("SELECT MAX(passtest_id) FROM passtest", dB.GetConnection());
-
-                adapter.SelectCommand = cmd;
-                adapter.Fill(dt);
-                DataRow dataRow = dt.Rows[0];
-                int passId = (int)dataRow[0];
-
-                DataTable dt2 = new DataTable();
-
-                MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-
-                MySqlCommand cmd1 = new MySqlCommand("UPDATE passtest SET passtest_corransw = passtest_corransw + 1 WHERE passtest_id = @id", dB.GetConnection());
-                cmd1.Parameters.AddWithValue("@id", passId);
-
-                adapter2.SelectCommand = cmd1;
-                adapter2.Fill(dt2);
-
-                dB.closeConnection();
-            }*/
-            this.Hide();
-            UserResaltForm userResaltForm = new UserResaltForm();
-            userResaltForm.Show();
-        }
-        private void SaveQuestion()
-        {
-            //Проверка равен ли единице labelCor соответствующего label
-            if (RadioButtonsGroupBoxCheced() == "1")
-            {
-                //Если "ДА", то добавление 1 в таблицу passtest столбец passtest_corransw
-                DB dB = new DB();
-                dB.openConnection();
-
-                DataTable dt = new DataTable();
-                MySqlDataAdapter adapter = new MySqlDataAdapter();
-
-                MySqlCommand cmd = new MySqlCommand("SELECT MAX(passtest_id) FROM passtest", dB.GetConnection());
-
-                adapter.SelectCommand = cmd;
-                adapter.Fill(dt);
-                DataRow dataRow = dt.Rows[0];
-                int passId = (int)dataRow[0];
-
-                DataTable dt2 = new DataTable();
-
-                MySqlDataAdapter adapter2 = new MySqlDataAdapter();
-
-                MySqlCommand cmd1 = new MySqlCommand("UPDATE passtest SET passtest_corransw = passtest_corransw + 1 WHERE passtest_id = @id", dB.GetConnection());
-                cmd1.Parameters.AddWithValue("@id", passId);
-
-                adapter2.SelectCommand = cmd1;
-                adapter2.Fill(dt2);
-
-                dB.closeConnection();
+                int c = TestForm.passtestId;
+                //Обновление данных в таблице прохождения теста passtest
+                DBQueries.PasstestUpdate(c);                    
+                UserResaltForm userResaltForm = new UserResaltForm();
+                userResaltForm.Show();                    
+                this.Hide();
             }
             else
             {
-
-            }
-        }    
+                UserResaltForm userResaltForm = new UserResaltForm();
+                userResaltForm.Show();                
+                this.Close();
+            }               
+        }      
     }
 }

@@ -12,8 +12,7 @@ using System.Windows.Forms;
 namespace Test
 {
     public partial class TestsList : Form
-    {
-        //public int currenRow { get; set; }
+    {        
         public TestsList()
         {
             InitializeComponent();
@@ -21,13 +20,10 @@ namespace Test
         }
         private void TestListFill()
         {
-            //Заполнение грида данными из базы данных
-            DBQueries dBQueries = new DBQueries();
-            nametestDataGridView.DataSource = dBQueries.LoadTests();
-
-            //return table;
+            //Заполнение грида данными из базы данных            
+            nametestDataGridView.DataSource = DBQueries.LoadTests();           
         }
-
+        //Отмена процесса прохождения теста и возвращение на стартовую страницу StartPage
         private void CloseButton_Click(object sender, EventArgs e)
         {
             DialogResult res = MessageBox.Show("Вы действительно хотите отменить выбор теста?", "", MessageBoxButtons.YesNo);
@@ -38,7 +34,7 @@ namespace Test
                 start.Show();
             }
         }
-
+        //Старт процесса прохождения выбранного теста
         public void OkButton_Click(object sender, EventArgs e)
         {
             int currenRow = (int)nametestDataGridView.CurrentRow.Cells[0].Value;

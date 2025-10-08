@@ -18,7 +18,7 @@ namespace Test
         {
             InitializeComponent();
         }
-
+        //Выход из процесса создания теста и возврат на стартовую форму StartPage
         private void CloseButton_Click(object sender, EventArgs e)
         {
             //Диалог с пользователем
@@ -30,7 +30,7 @@ namespace Test
                 startPage.Show();
             }
         }
-
+        //Сохранение наименования теста в таблицу nametest и переход к процессу создания вопросов и ответов к ним
         private void OK_Click(object sender, EventArgs e)
         {
             //Проверка заполненности наименования
@@ -41,9 +41,8 @@ namespace Test
                 return;
             }
             else
-            {
-                DBQueries dbQueries = new DBQueries();
-                dbQueries.CreateTestName(nametest);
+            {                
+                DBQueries.CreateTestName(nametest);
                 this.Hide();
                 CreateQuestion createQuestion = new CreateQuestion();
                 createQuestion.Show();

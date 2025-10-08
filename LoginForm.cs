@@ -16,8 +16,8 @@ namespace Test
         //Поле для загрузки данных из базы данных
         internal static List<Tuple<int, string, string>> loginPasswordList { get; set;} 
         //Поле для вычисления текущего пользователя приложения
-        public static LoginForm Instance { get; set; }
-        //public int userId { get; set; }
+        //public static LoginForm { get; set; }
+        public static int userId { get; set; }
         public LoginForm()
         {
             InitializeComponent();
@@ -26,10 +26,9 @@ namespace Test
         }
         //Загрузка формы (заполнение поля loginPasswordList данными)
         private void Load_LoginForm()
-        {
-            DBQueries dB = new DBQueries();
+        {            
             //Загрузка списка логинов и паролей из базы данных
-            loginPasswordList = dB.LoadLoginList().AsEnumerable()
+            loginPasswordList = DBQueries.LoadLoginList().AsEnumerable()
                 .Select(row =>new Tuple<int, string, string>((int)row[0], row[1].ToString(), row[2].ToString())).ToList();
         }
 
@@ -55,6 +54,7 @@ namespace Test
             }
             else 
             {
+                userId = loginPasswordList.First(t => t.Item2 == loginUser && t.Item3 == passUser).Item1;
                 this.Hide();
                 StartPage startPage = new StartPage();
                 startPage.Show();

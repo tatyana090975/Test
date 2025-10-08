@@ -8,11 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Mysqlx.Datatypes.Scalar.Types;
 
 namespace Test
 {
     public partial class UserResaltForm : Form
     {
+        //Свойство для помещения результатов прохождения теста и ФИО пользователя
+        public static List<Tuple<string, string, string, int, int>> ResultUs{get; set;}
         public UserResaltForm()
         {
             InitializeComponent();
@@ -21,35 +24,26 @@ namespace Test
         
         public void Load_UserResaltForm()
         {
-            //Запрашивем данные из таблицы результатов прохождения теста passtest
-            DB dB = new DB();
-            dB.openConnection();
+            //Получаем результаты прохождения теста из базы данных
+            int passtestId = TestForm.passtestId;
+            DataTable table = DBQueries.GetUserResaltData(passtestId);
 
-            DataTable dt = new DataTable();
-            MySqlDataAdapter adapter = new MySqlDataAdapter();
-            MySqlCommand command = new MySqlCommand("SELECT passtest_user, passtest_corransw, passtest_countquest FROM passtest ORDER BY passtest_id DESC LIMIT 1", dB.GetConnection());
-            adapter.SelectCommand = command;
-            adapter.Fill(dt);
+            ResultUs = table.AsEnumerable()
+                .Select(row => new Tuple<string, string, string, int, int>(
+                    row[0].ToString(),
+                    row[1].ToString(), 
+                    row[2].ToString(),
+                    Convert.ToInt32(row[3]),
+                    Convert.ToInt32(row[4]))).ToList();
 
-            //Присваиваем результаты запроса соответствующим меткам
-            DataRow row = dt.Rows[0];
-            int id = (int)row[0];
-            label3.Text = row[1].ToString();
-            label5.Text = row[2].ToString();
+            //Присваиваем результаты запроса соответствующим меткам            
+            label3.Text = ResultUs[0].Item4.ToString();
+            label5.Text = ResultUs[0].Item5.ToString();
 
-            //Запрашиваем данные из таблицы Person по ранее полученному passtest_id
-            DataTable dt2 = new DataTable();
-            MySqlDataAdapter adapter1 = new MySqlDataAdapter();
-            MySqlCommand command1 = new MySqlCommand("SELECT person_name, person_secondname, person_surname FROM person WHERE person_login = @id", dB.GetConnection());
-            command1.Parameters.AddWithValue("@id", id);
-            adapter1.SelectCommand = command1;
-            adapter1.Fill(dt2);
-
-            //Присваиваем результаты запроса соответствующей метке
-            DataRow row2 = dt2.Rows[0];
-            label1.Text = row2[0].ToString();
-            label7.Text = row2[1].ToString();
-            label8.Text = row2[2].ToString();          
+            //Присваиваем результаты запроса соответствующей метке            
+            label1.Text = ResultUs[0].Item1.ToString();
+            label7.Text = ResultUs[0].Item2.ToString();
+            label8.Text = ResultUs[0].Item3.ToString();
         }
         
         private void buttonOK_Click(object sender, EventArgs e)
